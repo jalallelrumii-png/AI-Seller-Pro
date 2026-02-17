@@ -3,234 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Seller Pro - Authorized Access</title>
+    <title>ScriptLaku PRO - AI Live Selling</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="manifest.json">
-    
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/9752/9752284.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --ios-bg-light: #F2F2F7; --ios-bg-dark: #000000; --ios-card-light: #FFFFFF; --ios-card-dark: #1C1C1E; }
-        body { font-family: 'SF Pro Display', -apple-system, sans-serif; transition: background 0.3s; margin: 0; }
-        .light-mode { background-color: var(--ios-bg-light); color: #000; }
-        .dark-mode { background-color: var(--ios-bg-dark); color: #FFF; }
-        .ios-card { border-radius: 24px; box-shadow: 0 4px 30px rgba(0,0,0,0.05); transition: 0.3s; }
-        .light-mode .ios-card { background: var(--ios-card-light); }
-        .dark-mode .ios-card { background: var(--ios-card-dark); border: 1px solid rgba(255,255,255,0.08); }
-        .ios-input { border-radius: 14px; border: none; outline: none; width: 100%; padding: 14px; font-size: 15px; }
-        .light-mode .ios-input { background: #E5E5EA; color: #000; }
-        .dark-mode .ios-input { background: #2C2C2E; color: #FFF; }
-        .apple-btn { background: #007AFF; color: white; border-radius: 16px; font-weight: 700; transition: 0.2s; letter-spacing: -0.01em; }
-        .apple-btn:active { transform: scale(0.96); opacity: 0.9; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .ios-card { border-radius: 28px; transition: transform 0.2s ease; }
+        .ios-card:active { transform: scale(0.98); }
+        
+        /* Dark Mode Colors */
+        .dark-theme { background: #000000; color: #ffffff; }
+        .dark-theme .card-bg { background: rgba(28, 28, 30, 0.8); border: 1px solid rgba(255,255,255,0.1); }
+        .dark-theme .input-bg { background: rgba(44, 44, 46, 1); color: white; }
+        
+        /* Light Mode Colors */
+        .light-theme { background: #F2F2F7; color: #000000; }
+        .light-theme .card-bg { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(0,0,0,0.05); }
+        .light-theme .input-bg { background: rgba(229, 229, 234, 1); color: black; }
+
+        .btn-gradient { background: linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%); }
         [x-cloak] { display: none !important; }
-        /* Custom scrollbar biar keren */
-        ::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
-<body x-data="sellerApp()" :class="darkMode ? 'dark-mode' : 'light-mode'" x-cloak>
+<body x-data="app()" :class="darkMode ? 'dark-theme' : 'light-theme'" x-cloak>
 
-    <nav class="sticky top-0 z-50 backdrop-blur-2xl border-b border-black/5 py-5 px-6 flex justify-between items-center" :class="darkMode ? 'bg-black/70' : 'bg-white/70'">
-        <div class="flex flex-col">
-            <h1 class="text-xl font-bold tracking-tight">AI Seller <span class="text-blue-500">PRO</span></h1>
-            <span class="text-[8px] font-black uppercase tracking-[0.3em] opacity-40">Industrial Grade Engine</span>
+    <nav class="sticky top-0 z-50 glass border-b border-black/5 dark:border-white/5 py-4 px-6 flex justify-between items-center" :class="darkMode ? 'bg-black/60' : 'bg-white/60'">
+        <div>
+            <h1 class="text-2xl font-extrabold tracking-tight italic">Script<span class="text-pink-500">Laku</span></h1>
+            <p class="text-[10px] font-bold uppercase tracking-widest opacity-50">AI Live Stream Generator</p>
         </div>
-        <div class="flex items-center gap-2">
-            <button @click="darkMode = !darkMode" class="p-2.5 rounded-full bg-gray-200 dark:bg-gray-800 transition-all">
+        <div class="flex gap-3">
+            <button @click="darkMode = !darkMode" class="p-3 rounded-2xl card-bg text-xl shadow-sm">
                 <span x-text="darkMode ? '☀️' : '🌙'"></span>
             </button>
-            <button @click="openConfig = true" class="p-2.5 rounded-full bg-gray-200 dark:bg-gray-800 transition-all">⚙️</button>
+            <button @click="openSettings = true" class="p-3 rounded-2xl card-bg text-xl shadow-sm">⚙️</button>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <section class="lg:col-span-5 space-y-4">
-            <div class="ios-card p-7">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-lg font-bold">Data Input</h2>
-                    <div class="flex gap-1.5">
-                        <template x-for="(n, i) in 5">
-                            <button @click="activeIdx = i" 
-                                    class="w-9 h-9 rounded-xl font-bold text-xs transition-all flex items-center justify-center shadow-sm"
-                                    :class="activeIdx === i ? 'bg-blue-500 text-white scale-110' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'" 
-                                    x-text="i+1"></button>
-                        </template>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Script Type</label>
-                        <select x-model="data[activeIdx].type" class="ios-input appearance-none">
-                            <option>🎯 Opening Live</option>
-                            <option>🛍️ Presentasi Produk</option>
-                            <option>⚡ Flash Sale</option>
-                            <option>🎁 Closing</option>
-                            <option>💬 Boost Engagement</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Kategori</label>
-                        <select x-model="data[activeIdx].cat" class="ios-input appearance-none">
-                            <option>👗 Fashion</option>
-                            <option>📱 Elektronik</option>
-                            <option>🍜 Makanan & Minuman</option>
-                            <option>💄 Kecantikan</option>
-                            <option>🏠 Rumah Tangga</option>
-                            <option>⚽ Olahraga</option>
-                            <option>🧸 Mainan & Hobi</option>
-                            <option>📦 Lainnya</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Nama Produk</label>
-                        <input type="text" x-model="data[activeIdx].name" placeholder="Contoh: Dress Korea Premium" class="ios-input">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="text" x-model="data[activeIdx].pNormal" placeholder="Harga Normal" class="ios-input">
-                        <input type="text" x-model="data[activeIdx].pLive" placeholder="Harga Promo" class="ios-input font-bold text-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Keunggulan Produk</label>
-                        <textarea x-model="data[activeIdx].desc" placeholder="Bahan adem, jahitan rapi..." class="ios-input h-24 resize-none"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Gaya Bahasa</label>
-                        <select x-model="data[activeIdx].style" class="ios-input appearance-none">
-                            <option>🔥 Energik</option>
-                            <option>😊 Friendly</option>
-                            <option>👔 Professional</option>
-                            <option>😆 Lucu</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button @click="processAI()" :disabled="working" class="w-full apple-btn p-5 mt-10 shadow-blue-500/20 shadow-xl flex justify-center items-center gap-3">
-                    <span x-show="!working" class="text-sm font-black uppercase tracking-widest">Generate 5 Script</span>
-                    <div x-show="working" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+    <main class="p-5 max-w-2xl mx-auto pb-32">
+        <div class="flex justify-between mb-6 overflow-x-auto pb-2 gap-2 no-scrollbar">
+            <template x-for="(prod, index) in products" :key="index">
+                <button @click="activeTab = index" 
+                    :class="activeTab === index ? 'btn-gradient text-white scale-105 shadow-lg' : 'card-bg opacity-60'"
+                    class="px-5 py-3 rounded-2xl font-bold text-sm transition-all whitespace-nowrap min-w-[80px]">
+                    Item <span x-text="index + 1"></span>
                 </button>
-            </div>
-        </section>
+            </template>
+        </div>
 
-        <section class="lg:col-span-7">
-            <div class="ios-card p-7 min-h-[600px] flex flex-col">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-xl font-bold">Smart Results</h2>
-                    <span class="text-[10px] font-bold text-green-500 bg-green-500/10 px-3 py-1 rounded-full uppercase tracking-tighter">Engine Ready</span>
-                </div>
+        <div class="ios-card card-bg p-6 shadow-xl space-y-5">
+            <div>
+                <label class="text-[11px] font-black uppercase tracking-widest opacity-40 mb-2 block">Script Type</label>
+                <select x-model="products[activeTab].type" class="w-full input-bg p-4 rounded-2xl font-semibold outline-none appearance-none">
+                    <option>🎯 Opening Live</option>
+                    <option>🛍️ Presentasi Produk</option>
+                    <option>⚡ Flash Sale</option>
+                    <option>🎁 Closing</option>
+                    <option>💬 Boost Engagement</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="text-[11px] font-black uppercase tracking-widest opacity-40 mb-2 block">Kategori</label>
+                <select x-model="products[activeTab].cat" class="w-full input-bg p-4 rounded-2xl font-semibold outline-none appearance-none">
+                    <option>👗 Fashion</option>
+                    <option>📱 Elektronik</option>
+                    <option>💄 Kecantikan</option>
+                    <option>🏠 Rumah Tangga</option>
+                    <option>📦 Lainnya</option>
+                </select>
+            </div>
+
+            <div class="space-y-4">
+                <input type="text" x-model="products[activeTab].name" placeholder="Nama Produk (Misal: Jaket Denim Pria)" class="w-full input-bg p-4 rounded-2xl font-medium outline-none">
                 
-                <div x-show="results.length === 0 && !working" class="flex-grow flex flex-col items-center justify-center opacity-20">
-                    <div class="text-7xl mb-6">🤖</div>
-                    <p class="text-center font-bold">System Idle.<br>Waiting for input...</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" x-model="products[activeTab].priceNormal" placeholder="Harga Normal" class="w-full input-bg p-4 rounded-2xl text-center outline-none">
+                    <input type="text" x-model="products[activeTab].priceLive" placeholder="Harga Live" class="w-full input-bg p-4 rounded-2xl text-center font-bold text-pink-500 outline-none border border-pink-500/30">
                 </div>
 
-                <div class="space-y-8 pb-10">
-                    <template x-for="(res, i) in results">
-                        <div class="p-6 rounded-[24px] border transition-all" :class="darkMode ? 'bg-[#2C2C2E] border-white/5' : 'bg-[#F9F9FB] border-black/5'">
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest" x-text="'Result #' + (i+1)"></span>
-                                <button @click="copy(res)" class="text-[10px] font-bold bg-blue-600 text-white px-5 py-2 rounded-full shadow-lg shadow-blue-600/30">COPY</button>
-                            </div>
-                            <div class="text-[15px] leading-relaxed font-medium whitespace-pre-wrap" x-html="res"></div>
-                        </div>
-                    </template>
-                </div>
+                <textarea x-model="products[activeTab].benefit" placeholder="Keunggulan (Bahan adem, anti air, dll)..." class="w-full input-bg p-4 rounded-2xl h-28 resize-none outline-none"></textarea>
             </div>
-        </section>
+
+            <div>
+                <label class="text-[11px] font-black uppercase tracking-widest opacity-40 mb-2 block">Gaya Bahasa</label>
+                <select x-model="products[activeTab].style" class="w-full input-bg p-4 rounded-2xl font-semibold outline-none appearance-none">
+                    <option>🔥 Energik</option>
+                    <option>😊 Friendly</option>
+                    <option>👔 Professional</option>
+                    <option>😆 Lucu</option>
+                </select>
+            </div>
+
+            <button @click="generateAll()" :disabled="loading" class="w-full btn-gradient py-5 rounded-[24px] text-white font-extrabold text-lg shadow-2xl shadow-pink-500/30 active:scale-95 transition-all">
+                <span x-show="!loading">🚀 Generate Script</span>
+                <span x-show="loading" class="flex justify-center items-center gap-2">
+                    <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    Processing...
+                </span>
+            </button>
+        </div>
+
+        <div x-show="products[activeTab].result" class="mt-8 ios-card card-bg p-6 space-y-4" x-transition>
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-xl">Script Result</h3>
+                <button @click="copy(products[activeTab].result)" class="px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-500/20">COPY</button>
+            </div>
+            <div class="text-[15px] leading-relaxed opacity-90 whitespace-pre-wrap" x-html="products[activeTab].result"></div>
+        </div>
     </main>
 
-    <div x-show="openConfig" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
-        <div class="ios-card w-full max-w-sm p-10 text-center relative" @click.away="openConfig = false">
-            <div class="w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8 shadow-2xl shadow-blue-600/40 border border-white/20">💎</div>
-            
-            <h3 class="text-2xl font-bold mb-2 text-white">License Key</h3>
-            <p class="text-[10px] text-gray-400 mb-10 px-6 font-bold uppercase tracking-[0.2em] leading-relaxed">Masukkan kode lisensi untuk mengaktifkan sinkronisasi server AI</p>
-            
-            <input type="password" x-model="authKey" placeholder="AI-SECRET-KEY-XXXX" class="ios-input p-5 mb-8 text-center font-mono text-sm tracking-widest border border-white/10 dark:bg-black/50">
-            
-            <button @click="saveAuth()" class="w-full apple-btn p-5 text-xs font-black uppercase tracking-widest bg-gradient-to-r from-blue-600 to-indigo-600">Activate License</button>
-            
-            <p class="mt-8 text-[9px] text-gray-600 italic font-medium uppercase tracking-tighter">Secure Engine v8.4.1 - Unauthorized usage is prohibited</p>
+    <div x-show="openSettings" class="fixed inset-0 z-[100] glass flex items-center justify-center p-6 bg-black/40">
+        <div class="card-bg w-full max-w-sm p-8 ios-card text-center" @click.away="openSettings = false">
+            <h3 class="text-xl font-bold mb-6">Configuration</h3>
+            <input type="password" x-model="apiKey" placeholder="Masukkan API Key Anda" class="w-full input-bg p-4 rounded-2xl mb-6 text-center">
+            <button @click="saveSettings()" class="w-full btn-gradient p-4 rounded-2xl text-white font-bold">Simpan & Tutup</button>
         </div>
     </div>
 
     <script>
-        function sellerApp() {
+        function app() {
             return {
-                authKey: localStorage.getItem('_app_auth_v2') || '',
-                openConfig: !localStorage.getItem('_app_auth_v2'),
-                darkMode: localStorage.getItem('_theme') === 'dark',
-                activeIdx: 0,
-                working: false,
-                data: Array.from({length: 5}, () => ({
-                    type: '🛍️ Presentasi Produk',
+                darkMode: true,
+                activeTab: 0,
+                loading: false,
+                openSettings: false,
+                apiKey: localStorage.getItem('scriptlaku_key') || '',
+                products: Array.from({length: 5}, () => ({
+                    type: '🎯 Opening Live',
                     cat: '👗 Fashion',
                     name: '',
-                    pNormal: '',
-                    pLive: '',
-                    desc: '',
-                    style: '🔥 Energik'
+                    priceNormal: '',
+                    priceLive: '',
+                    benefit: '',
+                    style: '🔥 Energik',
+                    result: ''
                 })),
-                results: [],
 
-                init() { this.$watch('darkMode', val => localStorage.setItem('_theme', val ? 'dark' : 'light')) },
-
-                saveAuth() {
-                    localStorage.setItem('_app_auth_v2', this.authKey);
-                    this.openConfig = false;
+                saveSettings() {
+                    localStorage.setItem('scriptlaku_key', this.apiKey);
+                    this.openSettings = false;
                 },
 
-                async processAI() {
-                    if(!this.authKey) return this.openConfig = true;
-                    const valid = this.data.filter(d => d.name.trim() !== '');
-                    if(valid.length === 0) return alert('Input produk dulu bos!');
+                async generateAll() {
+                    if(!this.apiKey) return this.openSettings = true;
+                    const p = this.products[this.activeTab];
+                    if(!p.name) return alert('Nama produk kosong, bos!');
 
-                    this.working = true;
-                    this.results = [];
-
+                    this.loading = true;
                     try {
-                        // Nama provider disembunyikan dalam fetch
-                        const tasks = valid.map(v => this.runEngine(v));
-                        this.results = await Promise.all(tasks);
+                        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${this.apiKey}`, 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                model: "llama-3.3-70b-versatile",
+                                messages: [{
+                                    role: "user",
+                                    content: `Buatkan skrip penjualan live streaming. Tipe: ${p.type}, Produk: ${p.name}, Kategori: ${p.cat}, Harga Normal: ${p.priceNormal}, Harga Live: ${p.priceLive}, Benefit: ${p.benefit}, Gaya Bahasa: ${p.style}. Buat yang sangat persuasif!`
+                                }]
+                            })
+                        });
+                        const data = await response.json();
+                        p.result = data.choices[0].message.content.replace(/\n/g, '<br>');
                     } catch (e) {
-                        alert("License Error! Periksa kembali kode lisensi anda.");
+                        alert('API Error! Cek koneksi atau Key lo.');
                     } finally {
-                        this.working = false;
+                        this.loading = false;
                     }
                 },
 
-                async runEngine(p) {
-                    // Endpoint Groq tetep dipake tapi gak disebut namanya di UI
-                    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                        method: 'POST',
-                        headers: { 'Authorization': `Bearer ${this.authKey}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            model: "llama-3.3-70b-versatile",
-                            messages: [{
-                                role: "user",
-                                content: `Buatkan skrip penjualan. Tipe: ${p.type}, Nama: ${p.name}, Kategori: ${p.cat}, Normal: ${p.pNormal}, Live: ${p.pLive}, Detail: ${p.desc}, Gaya: ${p.style}. Buat yang sangat persuasif!`
-                            }]
-                        })
-                    });
-                    const json = await res.json();
-                    return json.choices[0].message.content.replace(/\n/g, '<br>');
-                },
-
                 copy(txt) {
-                    const c = txt.replace(/<br>/g, '\n');
-                    navigator.clipboard.writeText(c);
-                    alert('Copied to Clipboard!');
+                    const cleanTxt = txt.replace(/<br>/g, '\n');
+                    navigator.clipboard.writeText(cleanTxt);
+                    alert('Script disalin ke clipboard!');
                 }
             }
+        }
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
         }
     </script>
 </body>
