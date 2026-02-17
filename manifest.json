@@ -1,0 +1,15 @@
+{
+  "name": "AI Seller Pro",
+  "short_name": "SellerPro",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#007AFF",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/9752/9752284.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
