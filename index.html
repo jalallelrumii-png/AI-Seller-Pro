@@ -2,11 +2,10 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScriptLaku ELITE - Live Stream AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScriptLaku ELITE - Live Stream Engine</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,143 +13,168 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .ios-card { border-radius: 24px; border: 1px solid rgba(255,255,255,0.08); }
-        .dark-theme { background: #000; color: #fff; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
+        .glass { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        .ios-card { border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); }
+        .dark-theme { background: #070707; color: #fff; }
         .light-theme { background: #F2F2F7; color: #000; }
-        .input-group { background: rgba(120,120,128,0.12); border-radius: 16px; padding: 12px; }
-        .input-field { background: transparent; width: 100%; outline: none; font-size: 14px; color: inherit; }
-        .btn-gen { background: linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%); transition: 0.3s; }
-        .btn-gen:active { transform: scale(0.96); }
+        .input-box { background: rgba(120,120,128,0.1); border-radius: 12px; padding: 12px; width: 100%; outline: none; font-size: 14px; color: inherit; border: 1px solid transparent; }
+        .input-box:focus { border: 1px solid #FF375F; }
+        .btn-gen { background: linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%); transition: 0.3s; cursor: pointer; }
+        .tab-btn { transition: 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .tab-active { background: #FF375F !important; color: white !important; box-shadow: 0 4px 15px rgba(255, 55, 95, 0.4); }
+        .scroll-area { height: calc(100vh - 80px); overflow-y: auto; scrollbar-width: none; }
+        .scroll-area::-webkit-scrollbar { display: none; }
         [x-cloak] { display: none !important; }
-        .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body x-data="app()" :class="darkMode ? 'dark-theme' : 'light-theme'" x-cloak>
 
-    <nav class="sticky top-0 z-50 backdrop-blur-xl border-b border-white/10 px-6 py-5 flex justify-between items-center" :class="darkMode ? 'bg-black/70' : 'bg-white/70'">
-        <div>
-            <h1 class="text-xl font-extrabold italic">Script<span class="text-pink-500">Laku</span></h1>
-            <p class="text-[8px] font-black uppercase tracking-widest opacity-40">Elite Bulk Streamer v4.0</p>
+    <nav class="h-20 glass border-b border-white/10 px-8 flex justify-between items-center relative z-50" :class="darkMode ? 'bg-black/80' : 'bg-white/80'">
+        <div class="flex items-center gap-3">
+            <h1 class="text-2xl font-black italic tracking-tighter text-pink-500 underline decoration-white/20">ScriptLaku <span class="text-white not-italic text-[10px] opacity-40 font-black tracking-widest ml-2 uppercase">v8.0 Elite</span></h1>
         </div>
-        <div class="flex gap-4">
-            <button @click="darkMode = !darkMode" class="text-lg" x-text="darkMode ? '☀️' : '🌙'"></button>
-            <button @click="openSet = true" class="text-lg">⚙️</button>
+        <div class="flex items-center gap-6">
+            <button @click="darkMode = !darkMode" class="text-xl" x-text="darkMode ? '☀️' : '🌙'"></button>
+            <button @click="openSet = true" class="text-xl">⚙️</button>
         </div>
     </nav>
 
-    <main class="p-4 max-w-md mx-auto space-y-6 pb-24">
+    <main class="flex flex-col md:flex-row w-full h-full">
         
-        <div class="ios-card p-6 shadow-2xl" :class="darkMode ? 'bg-[#1C1C1E]' : 'bg-white'">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="font-extrabold text-lg">Input Produk</h2>
-                <span class="text-[10px] bg-pink-500/10 text-pink-500 px-3 py-1 rounded-full font-bold">6 SLOTS</span>
-            </div>
-
-            <div class="space-y-6">
-                <template x-for="(p, i) in products" :key="i">
-                    <div class="p-4 rounded-2xl border border-white/5 bg-gray-500/5 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold" x-text="i+1"></span>
-                                <span class="text-[10px] font-bold opacity-40 uppercase tracking-widest">Data Produk</span>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3">
-                            <div class="input-group">
-                                <input type="text" x-model="p.name" placeholder="Nama Produk (Mis: Jaket Bomber)" class="input-field font-bold">
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="input-group">
-                                    <select x-model="p.cat" class="input-field font-semibold text-[11px]">
-                                        <option>👗 Fashion</option>
-                                        <option>💄 Beauty</option>
-                                        <option>📱 Gadget</option>
-                                        <option>🍜 Makanan</option>
-                                        <option>🏠 Home</option>
-                                        <option>📦 Lainnya</option>
-                                    </select>
-                                </div>
-                                <div class="input-group">
-                                    <select x-model="p.style" class="input-field font-semibold text-[11px]">
-                                        <option value="energik">🔥 Energik</option>
-                                        <option value="friendly">😊 Bestie</option>
-                                        <option value="professional">👔 Pro</option>
-                                        <option value="galak">😤 FOMO</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="input-group">
-                                    <input type="text" x-model="p.price" placeholder="Harga Promo" class="input-field text-pink-500 font-bold">
-                                </div>
-                                <div class="input-group">
-                                    <select x-model="p.type" class="input-field font-semibold text-[11px]">
-                                        <option>🎯 Opening</option>
-                                        <option>🛍️ Presentasi</option>
-                                        <option>⚡ Flash Sale</option>
-                                        <option>💬 Closing</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <aside class="w-full md:w-[420px] p-6 border-r border-white/5 bg-black/40">
+            <p class="text-[9px] font-black uppercase tracking-[0.4em] opacity-30 mb-4 text-center">Select Slot to Edit</p>
+            
+            <div class="flex justify-between gap-1.5 mb-8">
+                <template x-for="n in 6" :key="n">
+                    <button @click="activeTab = n-1" 
+                            :class="activeTab === n-1 ? 'tab-active' : 'bg-white/5 text-gray-500'"
+                            class="flex-1 h-12 rounded-xl font-black flex items-center justify-center tab-btn text-sm"
+                            x-text="n"></button>
                 </template>
             </div>
 
-            <button @click="generateAll()" :disabled="loading" class="w-full btn-gen py-5 mt-8 rounded-[20px] text-white font-black text-lg shadow-xl shadow-pink-500/20">
-                <span x-show="!loading">🚀 GENERATE 6 SKRIP</span>
-                <div x-show="loading" class="flex justify-center"><div class="spinner"></div></div>
-            </button>
-        </div>
-
-        <div class="space-y-4">
-            <template x-for="(res, i) in results" :key="i">
-                <div class="ios-card p-5 shadow-lg" :class="darkMode ? 'bg-[#1C1C1E]' : 'bg-white'" x-transition>
-                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-white/5">
-                        <div class="flex flex-col">
-                            <span class="text-[9px] font-black text-pink-500 uppercase tracking-tighter" x-text="'Script Live #' + (i+1)"></span>
-                            <span class="text-xs font-bold opacity-60" x-text="products[i].name"></span>
-                        </div>
-                        <button @click="copy(res)" class="text-[10px] bg-blue-600 px-5 py-2 rounded-full font-black text-white shadow-lg active:scale-90 transition-all">COPY</button>
+            <div class="ios-card p-6 space-y-4 shadow-2xl relative overflow-hidden" :class="darkMode ? 'bg-[#111]' : 'bg-white'">
+                <div class="absolute top-0 right-0 p-2 opacity-5 font-black text-4xl" x-text="activeTab + 1"></div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Kategori Live Stream</label>
+                        <select x-model="products[activeTab].liveCat" class="input-box font-bold text-pink-500 mt-1">
+                            <option>🔥 Hard Selling (Obral Parah)</option>
+                            <option>💡 Edukasi & Review</option>
+                            <option>📦 Unboxing Barang</option>
+                            <option>🗣️ Santai & Tanya Jawab</option>
+                            <option>🚀 Launching Produk Baru</option>
+                        </select>
                     </div>
-                    <div class="text-[14px] leading-relaxed opacity-90 whitespace-pre-wrap font-medium" x-html="res"></div>
+
+                    <div>
+                        <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Nama Produk</label>
+                        <input type="text" x-model="products[activeTab].name" placeholder="Mis: Serum Glowing 24K" class="input-box font-bold mt-1">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Kategori Barang</label>
+                            <select x-model="products[activeTab].itemCat" class="input-box text-xs mt-1">
+                                <option>👗 Fashion</option><option>💄 Beauty</option><option>📱 Gadget</option><option>🍜 Food</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Gaya Bahasa</label>
+                            <select x-model="products[activeTab].style" class="input-box text-xs mt-1">
+                                <option value="energik">🔥 Heboh/Energik</option>
+                                <option value="friendly">😊 Bestie/Santai</option>
+                                <option value="galak">😤 Gaspol/FOMO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Harga Live</label>
+                            <input type="text" x-model="products[activeTab].price" placeholder="Mis: 49rb" class="input-box font-black text-pink-500 mt-1">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Tipe Skrip</label>
+                            <select x-model="products[activeTab].type" class="input-box text-xs mt-1">
+                                <option>🎯 Opening</option><option>🛍️ Presentasi</option><option>⚡ Flash Sale</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Keunggulan Produk</label>
+                        <textarea x-model="products[activeTab].benefit" placeholder="Kenapa harus beli sekarang?" class="input-box h-24 resize-none text-sm mt-1"></textarea>
+                    </div>
                 </div>
-            </template>
-        </div>
+            </div>
+
+            <button @click="generateAll()" :disabled="loading" class="btn-gen w-full py-5 rounded-2xl text-white font-black text-lg shadow-2xl shadow-pink-500/30 mt-6 active:scale-95 transition-all">
+                <span x-show="!loading">GENERATE 6 SCRIPTS NOW 🚀</span>
+                <span x-show="loading" class="flex items-center gap-2 justify-center"><div class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div> LOADING...</span>
+            </button>
+        </aside>
+
+        <section class="flex-1 scroll-area p-8 bg-black/10">
+            <div class="flex items-center justify-between border-b border-white/5 pb-4 mb-8">
+                <h2 class="text-xs font-black uppercase tracking-[0.4em] text-pink-500">Live Script Results</h2>
+                <span class="text-[10px] font-bold opacity-30 uppercase" x-text="results.length > 0 ? '6 Slots Ready' : 'Standby'"></span>
+            </div>
+
+            <div x-show="results.length === 0" class="h-96 flex flex-col items-center justify-center opacity-10">
+                <div class="text-7xl mb-4">🎤</div>
+                <p class="font-black uppercase tracking-widest text-center">Siap Live Stream?<br>Isi data & klik generate!</p>
+            </div>
+
+            <div class="space-y-8">
+                <template x-for="(res, i) in results" :key="i">
+                    <div class="ios-card p-6 shadow-2xl relative border-l-[6px] border-l-pink-500 group" :class="darkMode ? 'bg-[#161616]' : 'bg-white'" x-transition>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex items-center gap-4">
+                                <span class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center font-black" x-text="i+1"></span>
+                                <div>
+                                    <h3 class="text-base font-black uppercase text-pink-500" x-text="products[i].name || 'Unnamed Product'"></h3>
+                                    <p class="text-[9px] font-bold opacity-40 uppercase tracking-widest" x-text="products[i].liveCat"></p>
+                                </div>
+                            </div>
+                            <button @click="copy(res)" class="bg-blue-600 hover:bg-blue-500 text-white text-[10px] px-6 py-2.5 rounded-full font-black uppercase shadow-lg transition-all active:scale-90">Copy Skrip</button>
+                        </div>
+                        <div class="text-[15px] leading-relaxed font-medium opacity-90 whitespace-pre-wrap italic bg-white/5 p-4 rounded-xl border border-white/5" x-html="res"></div>
+                    </div>
+                </template>
+            </div>
+        </section>
     </main>
 
-    <div x-show="openSet" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
-        <div class="ios-card w-full max-w-xs p-8 text-center bg-[#1C1C1E] border border-white/10">
-            <h3 class="text-xl font-bold text-white mb-2">Activation</h3>
-            <p class="text-[10px] text-gray-500 mb-6 uppercase">Masukkan License Key Server</p>
-            <input type="password" x-model="apiKey" placeholder="SECRET-KEY-XXXX" class="w-full bg-white/5 p-4 rounded-xl text-center mb-6 text-white outline-none border border-white/10">
-            <button @click="saveSet()" class="w-full btn-gen py-3 rounded-xl text-white font-bold">AKTIFKAN SEKARANG</button>
+    <div x-show="openSet" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/98 backdrop-blur-xl" x-cloak>
+        <div class="ios-card w-full max-w-sm p-10 text-center bg-[#111] border border-white/10 shadow-2xl">
+            <div class="text-5xl mb-6">🔑</div>
+            <h3 class="text-xl font-black text-white mb-2 uppercase tracking-tighter italic text-pink-500">Server Activation</h3>
+            <p class="text-[10px] text-gray-500 mb-8 tracking-widest uppercase">Input License Key to Start</p>
+            <input type="password" x-model="apiKey" placeholder="ENTER LICENSE" class="input-box text-center mb-6 text-white bg-white/5 font-bold tracking-widest">
+            <button @click="saveSet()" class="w-full btn-gen py-4 rounded-xl text-white font-black uppercase tracking-widest">Activate Server</button>
         </div>
     </div>
 
     <script>
         function app() {
             return {
-                darkMode: true, loading: false, openSet: false,
-                apiKey: localStorage.getItem('_secure_v4') || '',
-                products: Array.from({length: 6}, () => ({ name: '', cat: '👗 Fashion', style: 'energik', price: '', type: '🛍️ Presentasi' })),
+                darkMode: true, loading: false, openSet: false, activeTab: 0,
+                apiKey: localStorage.getItem('_scriptlaku_v8') || '',
+                products: Array.from({length: 6}, () => ({ name: '', itemCat: '👗 Fashion', liveCat: '🔥 Hard Selling (Obral Parah)', style: 'energik', price: '', benefit: '', type: '🛍️ Presentasi' })),
                 results: [],
-                saveSet() { localStorage.setItem('_secure_v4', this.apiKey); this.openSet = false; },
+                saveSet() { localStorage.setItem('_scriptlaku_v8', this.apiKey); this.openSet = false; },
                 async generateAll() {
                     if(!this.apiKey) return this.openSet = true;
                     const valids = this.products.filter(p => p.name.trim() !== '');
-                    if(valids.length === 0) return alert('Nama produk jangan kosong, bos!');
-                    
+                    if(valids.length === 0) return alert('Input minimal satu nama produk!');
                     this.loading = true; this.results = [];
                     try {
                         const jobs = valids.map(p => this.callAI(p));
                         this.results = await Promise.all(jobs);
-                    } catch (e) { alert('License Key bermasalah!'); } finally { this.loading = false; }
+                    } catch (e) { alert('API/License Error!'); } finally { this.loading = false; }
                 },
                 async callAI(p) {
                     const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -158,7 +182,7 @@
                         headers: { 'Authorization': `Bearer ${this.apiKey}`, 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             model: "llama-3.3-70b-versatile",
-                            messages: [{ role: "user", content: `Buat skrip live stream jualan yang sangat persuasif. Produk: ${p.name}, Kategori: ${p.cat}, Tipe: ${p.type}, Gaya: ${p.style}, Harga: ${p.price}. Buat skrip yang bikin orang rebutan beli, singkat, dan seru!` }]
+                            messages: [{ role: "user", content: `Buat skrip live stream jualan. Kategori Live: ${p.liveCat}, Produk: ${p.name}, Kategori Barang: ${p.itemCat}, Gaya Bahasa: ${p.style}, Harga: ${p.price}, Benefit: ${p.benefit}, Tipe: ${p.type}. Skrip harus sangat profesional sesuai kategori live, bikin orang FOMO, dan langsung mau checkout!` }]
                         })
                     });
                     const d = await r.json();
