@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Seller Pro - Authorized Access</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --ios-bg-light: #F2F2F7; --ios-bg-dark: #000000; --ios-card-light: #FFFFFF; --ios-card-dark: #1C1C1E; }
+        body { font-family: 'SF Pro Display', -apple-system, sans-serif; transition: background 0.3s; margin: 0; }
+        .light-mode { background-color: var(--ios-bg-light); color: #000; }
+        .dark-mode { background-color: var(--ios-bg-dark); color: #FFF; }
+        .ios-card { border-radius: 24px; box-shadow: 0 4px 30px rgba(0,0,0,0.05); transition: 0.3s; }
+        .light-mode .ios-card { background: var(--ios-card-light); }
+        .dark-mode .ios-card { background: var(--ios-card-dark); border: 1px solid rgba(255,255,255,0.08); }
+        .ios-input { border-radius: 14px; border: none; outline: none; width: 100%; padding: 14px; font-size: 15px; }
+        .light-mode .ios-input { background: #E5E5EA; color: #000; }
+        .dark-mode .ios-input { background: #2C2C2E; color: #FFF; }
+        .apple-btn { background: #007AFF; color: white; border-radius: 16px; font-weight: 700; transition: 0.2s; letter-spacing: -0.01em; }
+        .apple-btn:active { transform: scale(0.96); opacity: 0.9; }
+        [x-cloak] { display: none !important; }
+        /* Custom scrollbar biar keren */
+        ::-webkit-scrollbar { width: 0px; }
+    </style>
+</head>
+<body x-data="sellerApp()" :class="darkMode ? 'dark-mode' : 'light-mode'" x-cloak>
+
+    <nav class="sticky top-0 z-50 backdrop-blur-2xl border-b border-black/5 py-5 px-6 flex justify-between items-center" :class="darkMode ? 'bg-black/70' : 'bg-white/70'">
+        <div class="flex flex-col">
+            <h1 class="text-xl font-bold tracking-tight">AI Seller <span class="text-blue-500">PRO</span></h1>
+            <span class="text-[8px] font-black uppercase tracking-[0.3em] opacity-40">Industrial Grade Engine</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button @click="darkMode = !darkMode" class="p-2.5 rounded-full bg-gray-200 dark:bg-gray-800 transition-all">
+                <span x-text="darkMode ? '☀️' : '🌙'"></span>
+            </button>
+            <button @click="openConfig = true" class="p-2.5 rounded-full bg-gray-200 dark:bg-gray-800 transition-all">⚙️</button>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <section class="lg:col-span-5 space-y-4">
+            <div class="ios-card p-7">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-lg font-bold">Data Input</h2>
+                    <div class="flex gap-1.5">
+                        <template x-for="(n, i) in 5">
+                            <button @click="activeIdx = i" 
+                                    class="w-9 h-9 rounded-xl font-bold text-xs transition-all flex items-center justify-center shadow-sm"
+                                    :class="activeIdx === i ? 'bg-blue-500 text-white scale-110' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'" 
+                                    x-text="i+1"></button>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Script Type</label>
+                        <select x-model="data[activeIdx].type" class="ios-input appearance-none">
+                            <option>🎯 Opening Live</option>
+                            <option>🛍️ Presentasi Produk</option>
+                            <option>⚡ Flash Sale</option>
+                            <option>🎁 Closing</option>
+                            <option>💬 Boost Engagement</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Kategori</label>
+                        <select x-model="data[activeIdx].cat" class="ios-input appearance-none">
+                            <option>👗 Fashion</option>
+                            <option>📱 Elektronik</option>
+                            <option>🍜 Makanan & Minuman</option>
+                            <option>💄 Kecantikan</option>
+                            <option>🏠 Rumah Tangga</option>
+                            <option>⚽ Olahraga</option>
+                            <option>🧸 Mainan & Hobi</option>
+                            <option>📦 Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Nama Produk</label>
+                        <input type="text" x-model="data[activeIdx].name" placeholder="Contoh: Dress Korea Premium" class="ios-input">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" x-model="data[activeIdx].pNormal" placeholder="Harga Normal" class="ios-input">
+                        <input type="text" x-model="data[activeIdx].pLive" placeholder="Harga Promo" class="ios-input font-bold text-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Keunggulan Produk</label>
+                        <textarea x-model="data[activeIdx].desc" placeholder="Bahan adem, jahitan rapi..." class="ios-input h-24 resize-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-black text-gray-400 uppercase ml-1 mb-1.5 block tracking-widest">Gaya Bahasa</label>
+                        <select x-model="data[activeIdx].style" class="ios-input appearance-none">
+                            <option>🔥 Energik</option>
+                            <option>😊 Friendly</option>
+                            <option>👔 Professional</option>
+                            <option>😆 Lucu</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button @click="processAI()" :disabled="working" class="w-full apple-btn p-5 mt-10 shadow-blue-500/20 shadow-xl flex justify-center items-center gap-3">
+                    <span x-show="!working" class="text-sm font-black uppercase tracking-widest">Generate 5 Script</span>
+                    <div x-show="working" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                </button>
+            </div>
+        </section>
+
+        <section class="lg:col-span-7">
+            <div class="ios-card p-7 min-h-[600px] flex flex-col">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-xl font-bold">Smart Results</h2>
+                    <span class="text-[10px] font-bold text-green-500 bg-green-500/10 px-3 py-1 rounded-full uppercase tracking-tighter">Engine Ready</span>
+                </div>
+                
+                <div x-show="results.length === 0 && !working" class="flex-grow flex flex-col items-center justify-center opacity-20">
+                    <div class="text-7xl mb-6">🤖</div>
+                    <p class="text-center font-bold">System Idle.<br>Waiting for input...</p>
+                </div>
+
+                <div class="space-y-8 pb-10">
+                    <template x-for="(res, i) in results">
+                        <div class="p-6 rounded-[24px] border transition-all" :class="darkMode ? 'bg-[#2C2C2E] border-white/5' : 'bg-[#F9F9FB] border-black/5'">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest" x-text="'Result #' + (i+1)"></span>
+                                <button @click="copy(res)" class="text-[10px] font-bold bg-blue-600 text-white px-5 py-2 rounded-full shadow-lg shadow-blue-600/30">COPY</button>
+                            </div>
+                            <div class="text-[15px] leading-relaxed font-medium whitespace-pre-wrap" x-html="res"></div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div x-show="openConfig" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+        <div class="ios-card w-full max-w-sm p-10 text-center relative" @click.away="openConfig = false">
+            <div class="w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8 shadow-2xl shadow-blue-600/40 border border-white/20">💎</div>
+            
+            <h3 class="text-2xl font-bold mb-2 text-white">License Key</h3>
+            <p class="text-[10px] text-gray-400 mb-10 px-6 font-bold uppercase tracking-[0.2em] leading-relaxed">Masukkan kode lisensi untuk mengaktifkan sinkronisasi server AI</p>
+            
+            <input type="password" x-model="authKey" placeholder="AI-SECRET-KEY-XXXX" class="ios-input p-5 mb-8 text-center font-mono text-sm tracking-widest border border-white/10 dark:bg-black/50">
+            
+            <button @click="saveAuth()" class="w-full apple-btn p-5 text-xs font-black uppercase tracking-widest bg-gradient-to-r from-blue-600 to-indigo-600">Activate License</button>
+            
+            <p class="mt-8 text-[9px] text-gray-600 italic font-medium uppercase tracking-tighter">Secure Engine v8.4.1 - Unauthorized usage is prohibited</p>
+        </div>
+    </div>
+
+    <script>
+        function sellerApp() {
+            return {
+                authKey: localStorage.getItem('_app_auth_v2') || '',
+                openConfig: !localStorage.getItem('_app_auth_v2'),
+                darkMode: localStorage.getItem('_theme') === 'dark',
+                activeIdx: 0,
+                working: false,
+                data: Array.from({length: 5}, () => ({
+                    type: '🛍️ Presentasi Produk',
+                    cat: '👗 Fashion',
+                    name: '',
+                    pNormal: '',
+                    pLive: '',
+                    desc: '',
+                    style: '🔥 Energik'
+                })),
+                results: [],
+
+                init() { this.$watch('darkMode', val => localStorage.setItem('_theme', val ? 'dark' : 'light')) },
+
+                saveAuth() {
+                    localStorage.setItem('_app_auth_v2', this.authKey);
+                    this.openConfig = false;
+                },
+
+                async processAI() {
+                    if(!this.authKey) return this.openConfig = true;
+                    const valid = this.data.filter(d => d.name.trim() !== '');
+                    if(valid.length === 0) return alert('Input produk dulu bos!');
+
+                    this.working = true;
+                    this.results = [];
+
+                    try {
+                        // Nama provider disembunyikan dalam fetch
+                        const tasks = valid.map(v => this.runEngine(v));
+                        this.results = await Promise.all(tasks);
+                    } catch (e) {
+                        alert("License Error! Periksa kembali kode lisensi anda.");
+                    } finally {
+                        this.working = false;
+                    }
+                },
+
+                async runEngine(p) {
+                    // Endpoint Groq tetep dipake tapi gak disebut namanya di UI
+                    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${this.authKey}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            model: "llama-3.3-70b-versatile",
+                            messages: [{
+                                role: "user",
+                                content: `Buatkan skrip penjualan. Tipe: ${p.type}, Nama: ${p.name}, Kategori: ${p.cat}, Normal: ${p.pNormal}, Live: ${p.pLive}, Detail: ${p.desc}, Gaya: ${p.style}. Buat yang sangat persuasif!`
+                            }]
+                        })
+                    });
+                    const json = await res.json();
+                    return json.choices[0].message.content.replace(/\n/g, '<br>');
+                },
+
+                copy(txt) {
+                    const c = txt.replace(/<br>/g, '\n');
+                    navigator.clipboard.writeText(c);
+                    alert('Copied to Clipboard!');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
