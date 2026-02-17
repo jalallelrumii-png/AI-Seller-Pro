@@ -1,17 +1,9 @@
 {
   "name": "ScriptLaku ELITE",
-  "short_name": "ScriptLaku",
-  "description": "AI Live Selling Bulk Script Generator - Convert like Crazy!",
+  "short_name": "EliteAI",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#FF375F",
-  "icons": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/9752/9752284.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
+  "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/9752/9752284.png", "sizes": "512x512", "type": "image/png" }]
 }
